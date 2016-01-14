@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Weather WebApp</title>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    </head>
+
+    <body>
+
+        <div>
+            <h1> Local Forecast </h1>
+
+            <div class="today">
+              <p class="current">The forecast for... </p>
+              <div class="iconCurrent"></div>
+              <p class="forecastCurrent"></p>
+            </div>
+
+            <br></br>
+
+            <button id="btn">Next time period</button>
+
+            <div class="tonight">
+              <p class="next">The forecast for... </p>
+              <div class="iconNext"></div>
+              <p class="forecastNext"></p>
+            </div>
+
+            <br></br>
+            <p class="time">This forecast was generated at </p>
+        </div>
+
+        <script>
+          $(document).ready(function() {
+
+            $('.tonight').slideUp("fast");
+            $('#btn').click(function() {
+              $('.tonight').slideDown("slow");
+              $('#btn').fadeOut('slow');
+            });
+
+            $.ajax({
+                url: "http://forecast.weather.gov/MapClick.php?lat=33.670247&lon=-111.924505&FcstType=json"
+            }).then(function(weatherData) {
+              // current forecast
+              $('.current').append(weatherData.time.startPeriodName[0]);
+              $('.iconCurrent').append('<img src="' + weatherData.data.iconLink[0] + '"/>');
+              $('.forecastCurrent').append(weatherData.data.text[0]);
+
+              // next forecast
+              $('.next').append(weatherData.time.startPeriodName[1]);
+              $('.iconNext').append('<img src="' + weatherData.data.iconLink[1] + '"/>');
+              $('.forecastNext').append(weatherData.data.text[1]);
+
+              // forecast generation date and time
+              $('.time').append(weatherData.creationDateLocal);
+            });
+          });
+        </script>
+
+    </body>
+</html>
