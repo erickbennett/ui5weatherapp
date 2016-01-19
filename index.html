@@ -5,57 +5,107 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
     </head>
 
+    <style>
+      h1 {
+        font-family:arial;
+      }
+
+      form {
+        display: inline-block;
+      }
+
+      #button{
+        display: inline-block;
+        height:20px;
+        width:70px;
+        background-color:#cc0000;
+        font-family:arial;
+        font-weight:bold;
+        color:#ffffff;
+        border-radius: 5px;
+        text-align:center;
+        margin-top:2px;
+      }
+
+    </style>
+
     <body>
 
         <div>
             <h1> Local Forecast </h1>
 
-            <div class="today">
-              <p class="current">The forecast for... </p>
-              <div class="iconCurrent"></div>
-              <p class="forecastCurrent"></p>
-            </div>
+            <p>Enter your zip code:</p>
+
+            <form name="zipcodeForm">
+        			<input type="text" name="zipcodeInput"/>
+        		</form>
+
+        		<div id="button">Submit</div>
 
             <br></br>
 
-            <button id="btn">Next time period</button>
+            <div class="displayArea">
 
-            <div class="tonight">
-              <p class="next">The forecast for... </p>
-              <div class="iconNext"></div>
-              <p class="forecastNext"></p>
+              <div class="today">
+                <p class="current">The forecast for... </p>
+                <div class="iconCurrent"></div>
+                <p class="forecastCurrent"></p>
+              </div>
+
+              <br></br>
+
+              <button id="btn">Next time period</button>
+
+              <div class="tonight">
+                <p class="next">The forecast for... </p>
+                <div class="iconNext"></div>
+                <p class="forecastNext"></p>
+              </div>
+
+              <br></br>
+              <p class="time">This forecast was generated at </p>
+
             </div>
-
-            <br></br>
-            <p class="time">This forecast was generated at </p>
         </div>
 
         <script>
+          var zipcode;
+          var lat;
+          var lng;
+
           $(document).ready(function() {
 
-            $('.tonight').slideUp("fast");
-            $('#btn').click(function() {
-              $('.tonight').slideDown("slow");
-              $('#btn').fadeOut('slow');
-            });
+            $('#button').click(function() {
+              zipcode = $('input[name=zipcodeInput]').val();
 
-            $.ajax({
-                url: "http://forecast.weather.gov/MapClick.php?lat=33.670247&lon=-111.924505&FcstType=json"
-            }).then(function(weatherData) {
-              // current forecast
-              $('.current').append(weatherData.time.startPeriodName[0]);
-              $('.iconCurrent').append('<img src="' + weatherData.data.iconLink[0] + '"/>');
-              $('.forecastCurrent').append(weatherData.data.text[0]);
+              $.ajax({
+                url: "http://maps.googleapis.com/maps/api/geocode/json?address=" + zipcode
+              }).then(function(geoData) {
+                lat = geoData.results[0].geometry.location.lat;
+                lng = geoData.results[0].geometry.location.lng;
 
-              // next forecast
-              $('.next').append(weatherData.time.startPeriodName[1]);
-              $('.iconNext').append('<img src="' + weatherData.data.iconLink[1] + '"/>');
-              $('.forecastNext').append(weatherData.data.text[1]);
+                $.ajax({
+                    url: "http://forecast.weather.gov/MapClick.php?lat=" + lat + "&lon=" + lng + "&FcstType=json"
+                }).then(function(weatherData) {
+                  // current forecast
+                  $('.current').append(weatherData.time.startPeriodName[0]);
+                  $('.iconCurrent').append('<img src="' + weatherData.data.iconLink[0] + '"/>');
+                  $('.forecastCurrent').append(weatherData.data.text[0]);
+                  // next forecast
+                  $('.next').append(weatherData.time.startPeriodName[1]);
+                  $('.iconNext').append('<img src="' + weatherData.data.iconLink[1] + '"/>');
+                  $('.forecastNext').append(weatherData.data.text[1]);
+                  // forecast generation date and time
+                  $('.time').append(weatherData.creationDateLocal);
+                });
 
-              // forecast generation date and time
-              $('.time').append(weatherData.creationDateLocal);
+              });
             });
           });
+
+
+
+
         </script>
 
     </body>
