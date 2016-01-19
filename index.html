@@ -14,7 +14,20 @@
         display: inline-block;
       }
 
-      #button{
+      #button {
+        display: inline-block;
+        height:20px;
+        width:70px;
+        background-color:#cc0000;
+        font-family:arial;
+        font-weight:bold;
+        color:#ffffff;
+        border-radius: 5px;
+        text-align:center;
+        margin-top:2px;
+      }
+
+      #reset {
         display: inline-block;
         height:20px;
         width:70px;
@@ -41,6 +54,7 @@
         		</form>
 
         		<div id="button">Submit</div>
+            <div id="reset">Reset</div>
 
             <br></br>
 
@@ -53,8 +67,6 @@
               </div>
 
               <br></br>
-
-              <button id="btn">Next time period</button>
 
               <div class="tonight">
                 <p class="next">The forecast for... </p>
@@ -74,6 +86,11 @@
           var lng;
 
           $(document).ready(function() {
+            $('#reset').click(function() {
+              location.reload();
+            })
+
+            $('.displayArea').slideUp("fast");
 
             $('#button').click(function() {
               zipcode = $('input[name=zipcodeInput]').val();
@@ -100,11 +117,11 @@
                 });
 
               });
+
+              $('.displayArea').slideDown("slow");
+
             });
           });
-
-
-
 
         </script>
 
