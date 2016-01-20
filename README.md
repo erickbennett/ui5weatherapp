@@ -1,4 +1,4 @@
-# UI5 Weather Application
+# Weather Application
 
 ## Purpose
 This web application makes a call to the National Weather Service open api
@@ -13,4 +13,5 @@ http://www.weather.gov/
 index.html.
 
 ## Future Revisions
-Clean up the UI. Allow the ability to enter zip.
+Clean up the UI.
+Add ability to use geo location from browser.
